@@ -1,0 +1,17 @@
+{
+  "name": "fetch-make-responses",
+  "scripts": {
+    "start": "app.js"
+  },
+  "dependencies": {
+    "request": "1.9.x",
+    "jsdom": "~0.8.8",
+    "jquery": "~1.8.3",
+    "makeapi-client": "mozilla/makeapi-client",
+    "moment": "~2.4.0"
+  },
+  "version": "0.0.1",
+  "engines": {
+    "node": "v0.8.x"
+  }
+}
