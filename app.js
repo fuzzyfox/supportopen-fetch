@@ -53,6 +53,11 @@ var options = {
 	tags: [ 'supportopen' ]
 };
 
+
+if( argv.tags ) {
+	options.tags = argv.tags.split( ',' );
+}
+
 // functions
 function getOriginalMake( done, make ) {
 	make = make || allMakes[0];
@@ -86,19 +91,25 @@ function getOriginalMake( done, make ) {
 function getTestimonial( make, done ) {
 	request.get( make.url + '_', function( error, response, body ){
 		if( !error && response.statusCode === 200 ) {
-			debug( 'getting testimonial for %s', make.title );
+			debug( 'getting testimonial for %s', make.url );
 
 			make.html = body;
 
 			body = body.replace(/<script(.*?)>(.*?)<\/script>/, '', 'ig');
 
-			var doc	     = jsdom( body ),
-				window   = doc.parentWindow,
-				document = window.document,
-				$        = jquery.create( window );
+			var doc	     = jsdom( body );
+			var window   = doc.parentWindow;
+			var document = window.document;
 
-			if( $( 'blockquote > p:first-child' ).text() !== '' ) {
-				make.testimonial = $( 'blockquote > p:first-child' ).text().trim();
+			try {
+				var $ = jquery.create( window );
+
+				if( $( 'blockquote > p:first-child' ).text() !== '' ) {
+					make.testimonial = $( 'blockquote > p:first-child' ).text().trim();
+				}
+			}
+			catch (e) {
+				// do nothing on fail just ignore it.
 			}
 
 			done( make.testimonial );
